@@ -1,30 +1,51 @@
 <?php
-if (isset($_GET['id'])){
+
+//tangkap dulu datanya
+
+if (isset($_GET['id'])) {
     $id = $_GET['id'];
-  
 
-//1. Buat koneksi dengan MySQL
-$con = mysqli_connect("localhost","root","","fakultas");
+//1. buat koneksi dengan mysqli
+$con = mysqli_connect("localhost", "root", "", "todolist");
 
-//2. Cek koneksi dengan MySQL
-if(mysqli_connect_errno()){
-    echo "Koneksi gagal". mysqli_connect_error();
-}else{
-    echo "Koneksi berhasil";
+//2. cek koneksi dengan mysqli
+if (mysqli_connect_errno()) {
+    echo "koneksi gagal" . mysqli_connect_error();
+} else {
+    echo "";
 }
-// buat sql query untuk insert ke database
-// buat query untuk mendelete
-$sql = "DELETE FROM mahasiswa WHERE id=$id";
+//buat sql query insert ke database
+//buat query delete dan jalankan
+$sql = "DELETE FROM list where id='$id'";
 
-
-// jalankan query
-if (mysqli_query($con,$sql)){
-    echo "Data berhasil dihapus";
-}else{
-    echo "Ada error". mysqli_error();
+//jalankan query 
+if (mysqli_query($con, $sql)) {
+    echo "";
+} else {
+    echo "ada error" . mysqli_error($con);
 }
 
+//5. tutup koneksi mysql
 mysqli_close($con);
 
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <title>Delete</title>
+</head>
+
+</head>
+<body>
+    <h5>Kegiatan berhasil terhapus</h5>
+    <a class="btn btn-outline-primary" href="index.php" role="button">Kembali</a>
+</body>
+</html>

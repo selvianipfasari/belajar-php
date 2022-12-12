@@ -1,99 +1,94 @@
 <?php
 
-if (isset($_GET['id'])){
-
+if (isset($_GET['id'])) {
+    // ambil id dari url atau method get
     $id = $_GET['id'];
 
-    //1. Buat koneksi dengan MySQL
-    $con = mysqli_connect("localhost","root","","fakultas");
+    //1. buat koneksi dengan mysql
+    $con = mysqli_connect("localhost", "root", "", "todolist");
 
-    //2. Cek koneksi dengan MySQL
-    if(mysqli_connect_errno()){
-        echo "Koneksi gagal". mysqli_connect_error();
-    }else{
-        echo "Koneksi berhasil";
+    //2. cek konesksi dengan mysql
+    if (mysqli_connect_errno()) {
+        echo "koneksi gagal" . mysqli_connect_error();
+    } else {
+        echo "";
     }
 
-    //3. membaca data dari tabel MySQL.
-    $query= "SELECT *  FROM mahasiswa WHERE id=$id";
+    //3. membaca data dari table mysql
+    $sql = "SELECT * FROM list WHERE id='$id'";
 
-    //4. Tampilkan data dengan menjalankan sql query
-    $result = mysqli_query($con,$query);
-    $mahasiswa = [];
-    if ($result){
-        // tampilkan data satu per satu
-        while($row = mysqli_fetch_assoc($result)){
-            $mahasiswa = $row;
-        }     
-        mysqli_free_result($result);
+    //4. tampilkan data dengan menjalankan sql query
+    if ($result = mysqli_query($con, $sql)) {
+        echo "<br>";
+        while ($user_data = mysqli_fetch_assoc($result)) {
+            $nama = $user_data['nama'];
+            $waktu = $user_data['waktu'];
+        }
+    } else {
+        echo "eror: " . $sql . "<br>" . mysqli_error($con);
     }
 
     //5. tutup koneksi mysql
     mysqli_close($con);
-
 }
-
 //tangkap dulu datanya
-if (isset($_POST["submit"])){
-    $nim = $_POST['nim'];
-    $nama = $_POST['nama'];
-    $id_jurusan = $_POST['id_jurusan'];
-    $tpt_lahir = $_POST['tpt_lahir'];
-    $tgl_lahir = $_POST['tgl_lahir'];
-    $gender = $_POST['gender'];
-    $alamat = $_POST['alamat'];
-    $id = $_POST['id'];
 
-//1. Buat koneksi dengan MySQL
-$con = mysqli_connect("localhost","root","","fakultas");
+if (isset($_POST['submit'])) {
 
-//2. Cek koneksi dengan MySQL
-if(mysqli_connect_errno()){
-    echo "Koneksi gagal". mysqli_connect_error();
-}else{
-    echo "Koneksi berhasil";
-}
-// buat sql query untuk insert ke database
-// buat query insert dan jalankan
-$sql = "UPDATE mahasiswa SET nim='$nim', nama='$nama', id_jurusan='$id_jurusan', tempat_lahir='$tpt_lahir',
-tanggal_lahir='$tgl_lahir', alamat='$alamat' WHERE id=$id ";
+    $nama  = $_POST['nama'];
+    $waktu  = $_POST['waktu'];
 
 
-// jalankan query
-if (mysqli_query($con,$sql)){
-    echo "Data berhasil diubah";
-}else{
-    echo "Ada error". mysqli_error($con);
-}
+    //1. buat koneksi dengan mysqli
+    $con = mysqli_connect("localhost", "root", "", "todolist");
 
-mysqli_close($con);
+    //2. cek koneksi dengan mysqli
+    if (mysqli_connect_errno()) {
+        echo "koneksi gagal" . mysqli_connect_error();
+    } else {
+        echo "";
+    }
+    //buat sql query insert ke database
+    //buat query insert dan jalankan
+    $sql = "UPDATE list SET nama='$nama',waktu='$waktu' WHERE id='$id' ";
 
+    //jalankan query 
+    if (mysqli_query($con, $sql)) {
+        echo "data berhasi diubah";
+    } else {
+        echo "ada error" . mysqli_error($con);
+    }
+
+    //5. tutup koneksi mysql
+    mysqli_close($con);
 }
 
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update Data Mahasiswa</title>
+    <link rel="stylesheet" href="style.css">
+<!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <title>form</title>
 </head>
+
 <body>
-    <h1>Update Data Mahasiswa</h1>
-    <?php //var_dump($mahasiswa); ?>
-    <form action="update.php" method="post">
-        NIM: <input type="text" name="nim" value="<?php echo $mahasiswa['nim']; ?>"><br>
-        Nama: <input type="text" name="nama"value="<?php echo $mahasiswa['nama']; ?>" ><br>
-        Id Jurusan: <input type="number" name="id_jurusan"value="<?php echo $mahasiswa['id_jurusan']; ?>" ><br>
-        Jenis Kelamin: <input type="text" name="gender" value="<?php echo $mahasiswa['jenis_kelamin']; ?>"><br>
-        Tempat Lahir: <input type="text" name="tpt_lahir"value="<?php echo $mahasiswa['tempat_lahir']; ?>" ><br>
-        Tanggal Lahir (yyyy-mm-dd): <input type="text" name="tgl_lahir" value="<?php echo $mahasiswa['tanggal_lahir']; ?>"><br>
-        Alamat: <input type="text" name="alamat"value="<?php echo $mahasiswa['alamat']; ?>" ><br>
-       <input type="number" name="id" value="<?php echo $mahasiswa ['id'] ?>" hidden>
-        <button type="submitt" name="submit">Tambah Data</button>
-    </form>
+    <div>
+        <h3>Edit Kegiatan</h3>
+        <form class="form" action="" method="post">
+            Kegiatan: <input type="text" name="nama" value="<?php echo $nama; ?>"><br>
+            waktu: <input type="text" name="waktu" value="<?php echo $waktu; ?>"><br>
+            <input type="number" name="id" value="<?php echo $list['id'] ?>" hidden>
+            <a class="btn btn-outline-primary" href="index.php" role="button">Kembali</a>
+            <button type="submit" name="submit" class="btn btn-outline-danger">Simpan</button>
+        </form>
+    </div>
 </body>
+
 </html>
